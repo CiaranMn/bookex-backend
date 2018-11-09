@@ -86,6 +86,7 @@ class UserClass {
       .exec()
 
     const populatedObj = populated.toObject()
+    
     return _.pick(populatedObj, [
       'username',
       'name',

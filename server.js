@@ -46,22 +46,25 @@ app.get('/books', (request, response) => {
   } 
 })
 
+app.get('/books/currently_reading', (request, response) => {
+  // to be added - list of books currently being read
+})
+
 app.post('/users', (request, response) => {
   let user = new User(request.body)
-  console.log(user)
   user.save()
     .then(() => user.generateToken())
-    .then(token => { console.log(token);
-      response.header('Authorization', token).send(user)})
-    .catch(err => { console.log(err);
-      response.status(400).send(err)})
+    .then(token => {
+      response.header('Authorization', token)
+      user.toJSON()
+      .then(user => response.send({user}))
+    })
+    .catch(err => response.status(400).send(err))
 })
 
 app.get('/users/profile', authenticate, (request, response) => {
   request.user.toJSON()
-    .then(info => {console.log(info, typeof info)
-      response.send(info)
-    })
+    .then(user => response.send({user}))
 })
 
 app.patch('/users', authenticate, async function (request, response) {

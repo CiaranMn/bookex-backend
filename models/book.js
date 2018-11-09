@@ -46,7 +46,7 @@ class BookClass {
         }))
       }
     }))
-    console.log('done', userObj)
+    console.log('Creation from lists done')
   }
 
   static async createAndSetId(book) {
@@ -54,7 +54,6 @@ class BookClass {
       let newBook = new Book(book)
       const dbBook = await newBook.save()
       book._id = dbBook._id
-      console.log('book created', book)
     }
   }
 
