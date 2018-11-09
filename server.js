@@ -71,8 +71,13 @@ app.patch('/users', authenticate, async function (request, response) {
     'wishlist'
   ])
 
+  if (body.currently_reading) {
+    await Book.createAndSetId(body.currently_reading)
+  }
+
   await Book.findOrCreateBooksFromLists(body)
-  console.log("Line 75:", body)
+
+  console.log('book creation done')
   User.findByIdAndUpdate(request.user.id, 
     { $set: body }, { new: true })
       .then(user => response.send({user}) )

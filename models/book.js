@@ -39,32 +39,24 @@ class BookClass {
 
   static async findOrCreateBooksFromLists(userObj) {
     const lists = ['wishlist', 'favourite_books', 'books_read']
-    
-
     await Promise.all(lists.map(async list => {
-      await Promise.all(userObj[list].map(async book => {
-        let newBook = new Book(book)
-        const dbBook = await newBook.save()
-        book._id = dbBook._id
-        return dbBook
-      })
-    }
-    ))
-
-
-    // const bookCreations =
-    //   userObj["currently_reading"].map(async book => {
-    //     let newBook = new Book(book)
-    //     const dbBook = await newBook.save()
-    //     book._id = dbBook._id
-    //     return dbBook
-    //   })
-
-    // await Promise.all(bookCreations)
-
+      if (userObj[list]) {
+        await Promise.all(userObj[list].map(async book => {
+          await Book.createAndSetId(book)
+        }))
+      }
+    }))
+    console.log('done', userObj)
   }
 
- 
+  static async createAndSetId(book) {
+    if (!book.id) {
+      let newBook = new Book(book)
+      const dbBook = await newBook.save()
+      book._id = dbBook._id
+      console.log('book created', book)
+    }
+  }
 
 }
 
