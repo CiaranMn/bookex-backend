@@ -84,7 +84,7 @@ app.patch('/users', authenticate, async function (request, response) {
   User.findByIdAndUpdate(request.user.id, 
     { $set: body }, { new: true })
       .then(user => user.toJSON())
-      .then(user => {console.log(user, typeof user); response.send({user})})
+      .then(user => response.send({user}))
       .catch(err => response.status(400).send())
 })
 

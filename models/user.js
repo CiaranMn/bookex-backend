@@ -85,7 +85,8 @@ class UserClass {
       .populate('wishlist')
       .exec()
 
-    return JSON.stringify(_.pick(populated, [
+    const populatedObj = populated.toObject()
+    return _.pick(populatedObj, [
       'username',
       'name',
       'location',
@@ -93,7 +94,7 @@ class UserClass {
       'favourite_books',
       'books_read',
       'wishlist'
-    ]), undefined, 2)
+    ])
   }
 
 }
