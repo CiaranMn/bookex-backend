@@ -1,5 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
+const jwt = require('jsonwebtoken')
+const _ = require('lodash')
 
 const UserSchema = new Schema({
   username: {
@@ -8,6 +10,9 @@ const UserSchema = new Schema({
     unique: [true, 'Username is already taken'],
     minlength: 4,
     trim: true
+  }, password: {
+    type: String,
+    required: true,
   }, name: {
     type: String,
   }, location: {
@@ -24,11 +29,64 @@ const UserSchema = new Schema({
   }], wishlist: [{
     type: Schema.Types.ObjectId,
     ref: 'Book'
+  }], tokens: [{
+    type: String
   }]
 })
 
+UserSchema.pre('save', function (next) {
+  let user = this
+  if (user.isModified('password')) {
+    bcrypt.genSalt(10)
+      .then(salt => bcrypt.hash(user.password, salt))
+      .then(hash => {
+        user.password = hash
+        next()
+      })
+  } else {
+    next()
+  }
+})
+
 class UserClass {
-  // for instance and class methods
+
+  generateToken() {
+    let token = jwt.sign(
+      {sub: this._id.toHexString()},
+      process.env.secret)
+    console.log(token)
+    this.tokens.push(token)
+    return this.save().then( () => token )
+  }
+
+  findByToken(token) {
+    let decoded
+    try {
+      decoded = jwt.verify(token, process.env.secret)
+    } catch (err) {
+      return Promise.reject()
+    }
+    return User.findOne({
+      _id: decoded.sub,
+      tokens: token
+    })
+  }
+
+  authenticate(password) {
+    return bcrypt.compare(password, this.password)
+  }
+
+  toJSON() {
+    return _.pick(this.toObject(), [
+      'name',
+      'location',
+      'currently_reading',
+      'favourite_books',
+      'books_read',
+      'wishlist'
+    ])
+  }
+
 }
 
 UserSchema.loadClass(UserClass)
