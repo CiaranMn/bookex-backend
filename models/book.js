@@ -34,10 +34,48 @@ class BookClass {
       published_at: _.get(obj, 'volumeInfo.publishedDate'),
       categories: _.get(obj, 'volumeInfo.categories'),
       ISBN_13: _.get(obj, 'volumeInfo.industryIdentifiers[0].identifier'),
-      google_id: _.get(obj, 'id'),
       image: _.get(obj, 'volumeInfo.imageLinks.thumbnail')
     }
   }
+
+  static async findOrCreateBooksFromLists(userObj) {
+    const lists = ['wishlist', 'favourite_books', 'books_read']
+    
+    lists.forEach 
+    async lists => {
+
+    }
+    const bookCreations =
+       userObj["favourite_books"].map(async book => {
+          let newBook = new Book(book)
+          const dbBook = await newBook.save()
+          book._id = dbBook._id
+          return dbBook
+    })
+
+    // const bookCreations2 =
+    //   userObj["currently_reading"].map(async book => {
+    //     let newBook = new Book(book)
+    //     const dbBook = await newBook.save()
+    //     book._id = dbBook._id
+    //     return dbBook
+    //   })
+
+    // const bookCreations3 =
+    //   userObj["books_read"].map(async book => {
+    //     let newBook = new Book(book)
+    //     const dbBook = await newBook.save()
+    //     book._id = dbBook._id
+    //     return dbBook
+    //   })
+  
+    await Promise.all(bookCreations)
+    // await Promise.all(bookCreations2)
+    // await Promise.all(bookCreations3)
+  }
+
+ 
+
 }
 
 BookSchema.loadClass(BookClass)

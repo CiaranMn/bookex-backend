@@ -1,6 +1,7 @@
 const mongoose = require('mongoose')
 const Schema = mongoose.Schema
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcryptjs')
 const _ = require('lodash')
 
 const UserSchema = new Schema({
@@ -8,7 +9,7 @@ const UserSchema = new Schema({
     type: String,
     required: [true, 'Username must be supplied'],
     unique: [true, 'Username is already taken'],
-    minlength: 4,
+    // minlength: 4,
     trim: true
   }, password: {
     type: String,
@@ -53,16 +54,16 @@ class UserClass {
   generateToken() {
     let token = jwt.sign(
       {sub: this._id.toHexString()},
-      process.env.secret)
-    console.log(token)
+      process.env.SECRET)
     this.tokens.push(token)
     return this.save().then( () => token )
   }
 
-  findByToken(token) {
+  static findByToken(token) {
     let decoded
+    debugger
     try {
-      decoded = jwt.verify(token, process.env.secret)
+      decoded = jwt.verify(token, process.env.SECRET)
     } catch (err) {
       return Promise.reject()
     }
@@ -78,6 +79,7 @@ class UserClass {
 
   toJSON() {
     return _.pick(this.toObject(), [
+      'username',
       'name',
       'location',
       'currently_reading',
