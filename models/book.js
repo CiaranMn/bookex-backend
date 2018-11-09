@@ -8,7 +8,6 @@ const BookSchema = new mongoose.Schema({
     trim: true
   }, author: {
     type: String,
-    required: [true, 'Author must be supplied']
   }, description: {
     type: String
   }, published_at: {
@@ -41,19 +40,19 @@ class BookClass {
   static async findOrCreateBooksFromLists(userObj) {
     const lists = ['wishlist', 'favourite_books', 'books_read']
     
-    lists.forEach 
-    async lists => {
 
+    await Promise.all(lists.map(async list => {
+      await Promise.all(userObj[list].map(async book => {
+        let newBook = new Book(book)
+        const dbBook = await newBook.save()
+        book._id = dbBook._id
+        return dbBook
+      })
     }
-    const bookCreations =
-       userObj["favourite_books"].map(async book => {
-          let newBook = new Book(book)
-          const dbBook = await newBook.save()
-          book._id = dbBook._id
-          return dbBook
-    })
+    ))
 
-    // const bookCreations2 =
+
+    // const bookCreations =
     //   userObj["currently_reading"].map(async book => {
     //     let newBook = new Book(book)
     //     const dbBook = await newBook.save()
@@ -61,17 +60,8 @@ class BookClass {
     //     return dbBook
     //   })
 
-    // const bookCreations3 =
-    //   userObj["books_read"].map(async book => {
-    //     let newBook = new Book(book)
-    //     const dbBook = await newBook.save()
-    //     book._id = dbBook._id
-    //     return dbBook
-    //   })
-  
-    await Promise.all(bookCreations)
-    // await Promise.all(bookCreations2)
-    // await Promise.all(bookCreations3)
+    // await Promise.all(bookCreations)
+
   }
 
  
