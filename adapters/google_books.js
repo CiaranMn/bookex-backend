@@ -20,5 +20,3 @@ class BooksApi {
 }
 
 module.exports={BooksApi}
-
-BooksApi.searchBooks('harry')

@@ -58,7 +58,10 @@ app.post('/users', (request, response) => {
 })
 
 app.get('/users/profile', authenticate, (request, response) => {
-  response.send(request.user)
+  request.user.toJSON()
+    .then(info => {console.log(info, typeof info)
+      response.send(info)
+    })
 })
 
 app.patch('/users', authenticate, async function (request, response) {
@@ -80,7 +83,8 @@ app.patch('/users', authenticate, async function (request, response) {
   console.log('book creation done')
   User.findByIdAndUpdate(request.user.id, 
     { $set: body }, { new: true })
-      .then(user => response.send({user}) )
+      .then(user => user.toJSON())
+      .then(user => {console.log(user, typeof user); response.send({user})})
       .catch(err => response.status(400).send())
 })
 

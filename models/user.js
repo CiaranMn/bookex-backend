@@ -77,24 +77,23 @@ class UserClass {
     return bcrypt.compare(password, this.password)
   }
 
-  toJSON() {
-    return User.findById(this.id)
+  async toJSON() {
+    const populated = await User.findById(this.id)
       .populate('currently_reading')
       .populate('favourite_books')
       .populate('books_read')
       .populate('wishlist')
-      .exec((err, person) => { 
-        return _.pick(person, [
-          'username',
-          'name',
-          'location',
-          'currently_reading',
-          'favourite_books',
-          'books_read',
-          'wishlist'
-        ])
-        }
-        )
+      .exec()
+
+    return JSON.stringify(_.pick(populated, [
+      'username',
+      'name',
+      'location',
+      'currently_reading',
+      'favourite_books',
+      'books_read',
+      'wishlist'
+    ]), undefined, 2)
   }
 
 }

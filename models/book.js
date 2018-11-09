@@ -58,6 +58,18 @@ class BookClass {
     }
   }
 
+  toJSON() {
+    return _.pick(this.toObject(), [
+      'title',
+      'author',
+      'categories',
+      'published_at',
+      'ISBN_13',
+      'description',
+      'image'
+    ])
+  }
+
 }
 
 BookSchema.loadClass(BookClass)
