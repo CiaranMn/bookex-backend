@@ -78,15 +78,23 @@ class UserClass {
   }
 
   toJSON() {
-    return _.pick(this.toObject(), [
-      'username',
-      'name',
-      'location',
-      'currently_reading',
-      'favourite_books',
-      'books_read',
-      'wishlist'
-    ])
+    return User.findById(this.id)
+      .populate('currently_reading')
+      .populate('favourite_books')
+      .populate('books_read')
+      .populate('wishlist')
+      .exec((err, person) => { 
+        return _.pick(person, [
+          'username',
+          'name',
+          'location',
+          'currently_reading',
+          'favourite_books',
+          'books_read',
+          'wishlist'
+        ])
+        }
+        )
   }
 
 }
