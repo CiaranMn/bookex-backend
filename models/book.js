@@ -37,35 +37,34 @@ class BookClass {
     }
   }
 
-  static async findOrCreateBooksFromLists(userObj) {
+  static findOrCreateBooksFromLists(userObj) {
     const lists = ['wishlist', 'favourite_books', 'books_read']
-    await Promise.all(lists.map(async list => {
+    return Promise.all(lists.map(list => {
       if (userObj[list]) {
-        await Promise.all(userObj[list].map(async book => {
-          await Book.createAndSetId(book)
-        }))
+        return Promise.all(userObj[list].map(book => 
+          Book.createAndSetId(book)
+        ))
       }
     }))
-    console.log('Creation from lists done')
   }
 
-  static async createAndSetId(book) {
-    if (!book.id) {
+  static createAndSetId(book) {
+    if (!book._id) {
       let newBook = new Book(book)
-      const dbBook = await newBook.save()
-      book._id = dbBook._id
+      return newBook.save().then(dbBook => book._id = dbBook._id)
     }
   }
 
   toJSON() {
-    return _.pick(this.toObject(), [
+    return _.pick(this, [
       'title',
       'author',
       'categories',
       'published_at',
       'ISBN_13',
       'description',
-      'image'
+      'image',
+      '_id'
     ])
   }
 

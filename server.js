@@ -1,15 +1,15 @@
+require('dotenv').config()
+
 const express = require('express')
 const cors = require('cors')
 const port = process.env.PORT || 3000
 const app = express()
 
-const _ = require('lodash')
 const { mongoose } = require('./db/mongoose')
-const { ObjectID } = require('mongodb')
 
-const { BooksApi } = require('./adapters/google_books')
+const books = require('./routes/book-routes')
+const users = require('./routes/user-routes')
 const { User } = require('./models/user')
-const { Book } = require('./models/book')
 
 // const corsOptions = { origin: 'http://FRONT-END-URL.herokuapp.com' }
 // corsOptions to be uncommented and passed to cors(<HERE>) when URL known
@@ -37,58 +37,10 @@ const authenticate = (request, response, next) => {
   }).catch(err => response.status(401).send())
 }
 
-app.get('/books', (request, response) => {
-  let {query} = request        
-  if (query.q) { 
-    let start = query.start || 0
-    BooksApi.searchBooks(query.q, start)
-      .then(resp => response.send(resp))
-  } 
-})
+app.get('/books', books.get)
 
-app.get('/books/currently_reading', (request, response) => {
-  // to be added - list of books currently being read
-})
-
-app.post('/users', (request, response) => {
-  let user = new User(request.body)
-  user.save()
-    .then(() => user.generateToken())
-    .then(token => {
-      response.header('Authorization', token)
-      user.toJSON()
-      .then(user => response.send({user}))
-    })
-    .catch(err => response.status(400).send(err))
-})
-
-app.get('/users/profile', authenticate, (request, response) => {
-  request.user.toJSON()
-    .then(user => response.send({user}))
-})
-
-app.patch('/users', authenticate, async function (request, response) {
-  let body = _.pick(request.body, [
-    'name',
-    'location',
-    'currently_reading',
-    'favourite_books',
-    'books_read',
-    'wishlist'
-  ])
-
-  if (body.currently_reading) {
-    await Book.createAndSetId(body.currently_reading)
-  }
-
-  await Book.findOrCreateBooksFromLists(body)
-
-  console.log('book creation done')
-  User.findByIdAndUpdate(request.user.id, 
-    { $set: body }, { new: true })
-      .then(user => user.toJSON())
-      .then(user => response.send({user}))
-      .catch(err => response.status(400).send())
-})
+app.post('/users', users.post)
+app.get('/users/profile', authenticate, users.get)
+app.patch('/users', authenticate, users.patch)
 
 app.listen(port, () => console.log(`Server listening on port ${port}.`))

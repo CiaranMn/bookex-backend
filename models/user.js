@@ -61,7 +61,6 @@ class UserClass {
 
   static findByToken(token) {
     let decoded
-    debugger
     try {
       decoded = jwt.verify(token, process.env.SECRET)
     } catch (err) {
@@ -77,25 +76,24 @@ class UserClass {
     return bcrypt.compare(password, this.password)
   }
 
-  async toJSON() {
-    const populated = await User.findById(this.id)
+  toJSON() {
+    return User.findById(this.id)
       .populate('currently_reading')
       .populate('favourite_books')
       .populate('books_read')
       .populate('wishlist')
       .exec()
-
-    const populatedObj = populated.toObject()
-    
-    return _.pick(populatedObj, [
-      'username',
-      'name',
-      'location',
-      'currently_reading',
-      'favourite_books',
-      'books_read',
-      'wishlist'
-    ])
+      .then(userData =>
+        _.pick(userData, [
+          'username',
+          'name',
+          'location',
+          'currently_reading',
+          'favourite_books',
+          'books_read',
+          'wishlist'
+        ])
+      )
   }
 
 }
