@@ -1,5 +1,3 @@
-require('dotenv').config()
-
 const fetch = require('node-fetch')
 const {Book} = require('../models/book')
 

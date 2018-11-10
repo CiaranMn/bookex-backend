@@ -40,10 +40,20 @@ exports.patch = async (request, response) => {
     .catch(err => response.status(400).send())
 }
 
-exports.signin = (request, response) => {
-
+exports.login = (request, response) => {
+  User.findAndAuthenticate(request.body.username, request.body.password)
+    .then(user => { 
+        user.generateToken()
+        .then(token => {
+          response.header('Authorization', token)
+          return user.toJSON()
+        })
+        .then(user => response.send({ user }))
+      }).catch(err => response.status(400).send())
 }
 
 exports.logout = (request, response) => {
-  
+  request.user.removeToken(request.token)
+    .then(resp => response.status(200).send())
+    .catch(resp => response.status(400).send())
 }

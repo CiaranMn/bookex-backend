@@ -41,6 +41,9 @@ app.get('/books', books.get)
 
 app.post('/users', users.post)
 app.get('/users/profile', authenticate, users.get)
-app.patch('/users', authenticate, users.patch)
+app.patch('/users/profile', authenticate, users.patch)
+
+app.post('/users/login', users.login)
+app.post('/users/logout', authenticate, users.logout)
 
 app.listen(port, () => console.log(`Server listening on port ${port}.`))

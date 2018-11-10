@@ -59,6 +59,12 @@ class UserClass {
     return this.save().then( () => token )
   }
 
+  removeToken(token) {
+    return this.update({
+      $pull: { tokens: token }
+    })
+  }
+
   static findByToken(token) {
     let decoded
     try {
@@ -72,28 +78,41 @@ class UserClass {
     })
   }
 
+  static findAndAuthenticate(username, password) {
+    return User.findOne({username})
+      .then(user => {
+        if (!user) { return Promise.reject() }
+        return user.authenticate(password).then(resp => {
+          if (!resp) { 
+            return Promise.reject()
+          }
+          else { 
+            return Promise.resolve(user)
+          }
+        })
+      })
+  }
+
   authenticate(password) {
     return bcrypt.compare(password, this.password)
   }
 
-  toJSON() {
-    return User.findById(this.id)
+  async toJSON() {
+    const userData = await User.findById(this.id)
       .populate('currently_reading')
       .populate('favourite_books')
       .populate('books_read')
       .populate('wishlist')
-      .exec()
-      .then(userData =>
-        _.pick(userData, [
-          'username',
-          'name',
-          'location',
-          'currently_reading',
-          'favourite_books',
-          'books_read',
-          'wishlist'
-        ])
-      )
+      .exec();
+    return _.pick(userData, [
+      'username',
+      'name',
+      'location',
+      'currently_reading',
+      'favourite_books',
+      'books_read',
+      'wishlist'
+    ]);
   }
 
 }
