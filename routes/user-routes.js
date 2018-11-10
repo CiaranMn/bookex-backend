@@ -4,7 +4,7 @@ const { User } = require('../models/user')
 const { Book } = require('../models/book')
 
 exports.get = (request, response) => {
-  request.user.toJSON()
+  request.user.populate()
     .then(user => response.send({ user }))
 }
 
@@ -14,7 +14,7 @@ exports.post = (request, response) => {
     .then(() => user.generateToken())
     .then(token => {
       response.header('Authorization', token)
-      return user.toJSON()
+      return user.populate()
     }).then(user => response.send({ user }))
     .catch(err => response.status(400).send(err))
 }
@@ -33,9 +33,8 @@ exports.patch = async (request, response) => {
   }
   await Book.findOrCreateBooksFromLists(body)
   console.log('book creation done')
-  User.findByIdAndUpdate(request.user.id,
-    { $set: body }, { new: true })
-    .then(user => user.toJSON())
+  User.findByIdAndUpdate(request.user.id, body, { new: true })
+    .then(user => user.populate())
     .then(user => response.send({ user }))
     .catch(err => response.status(400).send())
 }
@@ -46,7 +45,7 @@ exports.login = (request, response) => {
         user.generateToken()
         .then(token => {
           response.header('Authorization', token)
-          return user.toJSON()
+          return user.populate()
         })
         .then(user => response.send({ user }))
       }).catch(err => response.status(400).send())

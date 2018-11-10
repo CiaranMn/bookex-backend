@@ -1,4 +1,6 @@
 const { BooksApi } = require('../adapters/google-books')
+const { Book } = require('../models/book')
+const { User } = require('../models/user')
 
 exports.get = (request, response) => {
   let { query } = request
@@ -11,6 +13,11 @@ exports.get = (request, response) => {
   }
 }
 
-exports.currentlyReading = (request, response) => {
-  // to be completed
+exports.popular = (request, response) => {
+  User.where('currently_reading').ne(null)
+    .then(users => 
+      Promise.all(users.map(user =>
+        Book.findById(user.currently_reading)
+      ))
+    ).then(resp => response.send(resp))
 }

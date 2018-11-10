@@ -83,12 +83,7 @@ class UserClass {
       .then(user => {
         if (!user) { return Promise.reject() }
         return user.authenticate(password).then(resp => {
-          if (!resp) { 
-            return Promise.reject()
-          }
-          else { 
-            return Promise.resolve(user)
-          }
+          if (resp) { return user }
         })
       })
   }
@@ -97,14 +92,17 @@ class UserClass {
     return bcrypt.compare(password, this.password)
   }
 
-  async toJSON() {
-    const userData = await User.findById(this.id)
+  populate() {
+    return User.findById(this.id)
       .populate('currently_reading')
       .populate('favourite_books')
       .populate('books_read')
       .populate('wishlist')
       .exec();
-    return _.pick(userData, [
+  }
+
+  toJSON() {
+    return _.pick(this.toObject(), [
       'username',
       'name',
       'location',
