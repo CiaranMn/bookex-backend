@@ -14,13 +14,13 @@
 - returns a 401 status if the token is not verified as having originated from the server, is no longer present on the server, or relates to a user that cannot be found.
 
 ### PATCH /users/profile
-- expects a JSON object with one or more valid user fields (except `username` and `password` which currently cannot be changed), along with an `Authoriation` key in the header with a JWT token.
+- expects a JSON object with one or more valid user fields (except `username` and `password` which currently cannot be changed), along with an `Authorization` key in the header with a JWT token.
 - will update the user record if the token is valid. Only specified fields will be changed - any not included in the request will be untouched.
 - returns a 400 status if there are any errors.
 
 ### POST /users/login
 - expects a JSON object and requires a `username` and `password` field.
-- returns an empty body with an `Authoriation` key in the header with a JWT token.
+- returns an empty body with an `Authorization` key in the header with a JWT token.
 - returns a 400 status if the user is not found or if the password is incorrect.
 
 ### POST /users/logout
