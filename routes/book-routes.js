@@ -14,10 +14,26 @@ exports.get = (request, response) => {
 }
 
 exports.popular = (request, response) => {
-  User.where('currently_reading').ne(null)
-    .then(users => 
-      Promise.all(users.map(user =>
-        Book.findById(user.currently_reading)
-      ))
-    ).then(resp => response.send(resp))
+  User.aggregate([ 
+      { $match: {
+        'currently_reading': { $exists: true }
+      }},
+      { $group: {
+        _id: '$currently_reading',
+        readers: {$sum: 1}
+      }},
+      { $sort: 
+        { reading: 1 }
+      }, {
+        $project: {
+          _id: 0,
+          book: '$_id',
+          readers: 1
+        }
+      }
+    ])
+    .exec()
+    .then(agg => 
+      Book.populate(agg, { path: 'book'}))
+    .then(resp => response.send(resp))
 }
