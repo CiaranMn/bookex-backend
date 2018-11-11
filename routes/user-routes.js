@@ -15,7 +15,7 @@ exports.post = (request, response) => {
     .then(token => {
       response.header('authorization', token)
       return user.populate()
-    }).then(user => response.send({ user, token }))
+    }).then(user => response.send({ user }))
     .catch(err => response.status(400).send(err))
 }
 
