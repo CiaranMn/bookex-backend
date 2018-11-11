@@ -13,9 +13,9 @@ exports.post = (request, response) => {
   user.save()
     .then(() => user.generateToken())
     .then(token => {
-      response.header('Authorization', token)
+      response.header('authorization', token)
       return user.populate()
-    }).then(user => response.send({ user }))
+    }).then(user => response.send({ user, token }))
     .catch(err => response.status(400).send(err))
 }
 
@@ -44,7 +44,7 @@ exports.login = (request, response) => {
     .then(user => { 
         user.generateToken()
         .then(token => {
-          response.header('Authorization', token)
+          response.header('authorization', token)
           return user.populate()
         })
         .then(user => response.send({ user }))

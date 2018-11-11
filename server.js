@@ -26,7 +26,7 @@ app.use((error, request, response, next) => {
 })
 
 const authenticate = (request, response, next) => {
-  let token = request.header('Authorization')
+  let token = request.header('authorization')
   User.findByToken(token).then(user => {
     if (!user) {
       return Promise.reject()
