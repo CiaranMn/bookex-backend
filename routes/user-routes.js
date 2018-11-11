@@ -13,6 +13,7 @@ exports.post = (request, response) => {
   user.save()
     .then(() => user.generateToken())
     .then(token => {
+      response.header('Access-Control-Expose-Headers', 'authorization')
       response.header('authorization', token)
       return user.populate()
     }).then(user => response.send({ user }))
