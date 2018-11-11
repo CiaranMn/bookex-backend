@@ -45,6 +45,7 @@ exports.login = (request, response) => {
     .then(user => { 
         user.generateToken()
         .then(token => {
+          response.header('Access-Control-Expose-Headers', 'authorization')
           response.header('authorization', token)
           return user.populate()
         })
