@@ -23,7 +23,7 @@ exports.popular = (request, response) => {
         readers: {$sum: 1}
       }},
       { $sort: 
-        { reading: 1 }
+        { readers: -1 }
       }, {
         $project: {
           _id: 0,
