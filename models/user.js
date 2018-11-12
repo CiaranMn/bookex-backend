@@ -94,11 +94,11 @@ class UserClass {
 
   populate() {
     return User.findById(this.id)
-      .populate('currently_reading')
-      .populate('favourite_books')
-      .populate('books_read')
-      .populate('wishlist')
-      .exec();
+      .populate('currently_reading', '-__v')
+      .populate('favourite_books', '-__v')
+      .populate('books_read', '-__v')
+      .populate('wishlist', '-__v')
+      .exec()      
   }
 
   toJSON() {

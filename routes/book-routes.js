@@ -20,7 +20,7 @@ exports.popular = (request, response) => {
       }},
       { $group: {
         _id: '$currently_reading',
-        readers: {$sum: 1}
+        readers: { $sum: 1 }
       }},
       { $sort: 
         { readers: -1 }

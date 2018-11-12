@@ -5,7 +5,7 @@ const { Book } = require('../models/book')
 
 exports.get = (request, response) => {
   request.user.populate()
-    .then(user => response.send({ user }))
+    .then(user => response.send({ user}))
 }
 
 exports.post = (request, response) => {

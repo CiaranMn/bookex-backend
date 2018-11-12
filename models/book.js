@@ -40,7 +40,7 @@ class BookClass {
   static findOrCreateBooksFromLists(userObj) {
     const lists = ['wishlist', 'favourite_books', 'books_read']
     return Promise.all(lists.map(list => {
-      if (userObj[list]) {
+      if (userObj[list] && userObj[list] instanceof Array) {
         return Promise.all(userObj[list].map(book => 
           Book.createAndSetId(book)
         ))
@@ -49,10 +49,19 @@ class BookClass {
   }
 
   static createAndSetId(book) {
-    if (!book._id) {
+    if (book._id) { return }
+    if (!Book.ISBN_13) {
       let newBook = new Book(book)
       return newBook.save().then(dbBook => book._id = dbBook._id)
     }
+    return Book.findOne({ISBN_13: parseInt(book.ISBN_13)})
+      .then(foundBook => {
+        if (!foundBook) {
+          let newBook = new Book(book)
+          return newBook.save().then(dbBook => book._id = dbBook._id)
+        } 
+        book._id = foundBook._id
+      })
   }
 
   toJSON() {
