@@ -20,7 +20,7 @@
 
 ### POST /users/login
 - expects a JSON object and requires a `username` and `password` field.
-- returns an empty body with an `Authorization` key in the header with a JWT token.
+- returns the user object with an `Authorization` key in the header with a JWT token.
 - returns a 400 status if the user is not found or if the password is incorrect.
 
 ### POST /users/logout
