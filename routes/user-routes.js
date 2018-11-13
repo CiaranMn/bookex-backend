@@ -32,7 +32,7 @@ exports.patch = async (request, response) => {
   if (body.currently_reading) {
     await Book.createAndSetId(body.currently_reading)
   }
-  await Book.findOrCreateBooksFromLists(body)
+  await Book.findOrCreateBooksFromLists(body) 
   console.log('book creation done')
   User.findByIdAndUpdate(request.user.id, body, { new: true })
     .then(user => user.populate())
