@@ -4,7 +4,6 @@ const _ = require('lodash')
 const BookSchema = new mongoose.Schema({
   title: {
     type: String,
-    required: [true, 'Title must be supplied'],
     trim: true
   }, author: {
     type: String,
@@ -37,15 +36,25 @@ class BookClass {
     }
   }
 
-  static findOrCreateBooksFromLists(userObj) {
+  // static findOrCreateBooksFromLists(userObj) {
+  //   const lists = ['wishlist', 'favourite_books', 'books_read']
+  //   return Promise.all(lists.map(list => {
+  //     if (userObj[list] && userObj[list] instanceof Array) {
+  //       return Promise.all(userObj[list].map(book => 
+  //         Book.createAndSetId(book)
+  //       ))
+  //     }
+  //   }))
+  // }
+
+    static findOrCreateBooksFromLists(userObj) {
     const lists = ['wishlist', 'favourite_books', 'books_read']
-    return Promise.all(lists.map(list => {
-      if (userObj[list] && userObj[list] instanceof Array) {
-        return Promise.all(userObj[list].map(book => 
-          Book.createAndSetId(book)
-        ))
-      }
-    }))
+    return Promise.all(
+        lists.reduce((acc, key) =>
+          acc.concat(userObj[key] && userObj[key].map(book =>     Book.createAndSetId(book))),
+          []
+        )
+      )
   }
 
   static createAndSetId(book) {
