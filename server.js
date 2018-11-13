@@ -5,7 +5,7 @@ const cors = require('cors')
 const port = process.env.PORT || 3000
 const app = express()
 
-const { mongoose } = require('./db/mongoose')
+require('./db/mongoose')
 
 const books = require('./routes/book-routes')
 const users = require('./routes/user-routes')
