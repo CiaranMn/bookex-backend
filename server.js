@@ -51,11 +51,10 @@ then need to save the information to the database
 */
 
 app.post('/loans', async (req, res) => {
-  console.log(req.body)
   await Book.createAndSetId(req.body.book)
   let loan = new Loan(req.body)
   loan.save().then((doc) => {
-   
+    res.send(doc)
   }, (e) => {
       res.status(400).send(e)
   })
@@ -67,14 +66,11 @@ app.post('/loans', async (req, res) => {
 app.get('/loans', (req, res) => {
   Loan.find().populate('book').populate('user').exec()
     .then((loans) => {
-      res.send({
-          loans
-      })
+      res.send({ loans })
   }, (e) => {
       res.status(400).send(e)
   })
 })
-
 
 
 app.get('/books', books.get)
@@ -91,15 +87,16 @@ app.listen(port, () => console.log(`Server listening on port ${port}.`))
 
 
 // {
-// 	"user_id": "5beabac108ea540016b0541e",
+// 	"user_id": "5beb17026197e92bcf7b5e36",
 // 	"book": {
-// 		"title": ,
-//     	"author": ,
-//     	"description": ,
-//     	"published_at": ,
-//     	"categories": ,
-// 	    "ISBN_13": ,
-//     	"image": 
-// 	}
+// 		"title": "Peas!",
+//     	"author": "Andy Cullen",
+//     	"description": "Have you ever wondered how a tiny little pea gets from a peapod on to your plate? They haven't got legs so they can't walk; They haven't got wings so they can't fly. So, how do peas find you? Why don't you read their story and find out? Go on, give peas a chance!",
+//     	"published_at": "2009",
+//     	"categories": "Food",
+// 	    "ISBN_13": "9780141502588",
+//     	"image": "http://books.google.com/books/content?id=87VqPgAACAAJ&printsec=frontcover&img=1&zoom=1&source=gbs_api"
+// 	},
 // 	"location": "London"
 // }
+

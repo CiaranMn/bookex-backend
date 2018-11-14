@@ -14,9 +14,6 @@ const LoanSchema = new mongoose.Schema({
       }
 })
 
-// class LoanClass { 
-// }
-
 // LoanSchema.loadClass(LoanClass)
 
 const Loan = mongoose.model('Loan', LoanSchema)
