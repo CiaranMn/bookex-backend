@@ -53,7 +53,8 @@ then need to save the information to the database
 app.post('/loans', async (req, res) => {
   await Book.createAndSetId(req.body.book)
   let loan = new Loan(req.body)
-  loan.save().then((doc) => {
+  loan.save()
+    .then(doc => {
     res.send(doc)
   }, (e) => {
       res.status(400).send(e)
@@ -64,13 +65,42 @@ app.post('/loans', async (req, res) => {
 // // will find book id if it exists otherwise it will create a new book if it doesnt and return id
 // Book.createAndSetId(req.body.book )
 app.get('/loans', (req, res) => {
-  Loan.find().populate('book').populate('user').exec()
+  Loan.find()
+    .populate('book')
+    .populate('user')
+    .exec()
     .then((loans) => {
       res.send({ loans })
   }, (e) => {
       res.status(400).send(e)
   })
 })
+
+app.get('/loans/:id', (req, res) => {
+  Loan.find({ book: req.params.id})
+    .populate('book')
+    .populate('user')
+    .exec()
+    .then((loans) => {
+      res.send({ loans })
+    }, (e) => {
+      res.status(400).send(e)
+    })
+})
+
+app.delete('/loan/:id', (req, res) => {
+  const id = req.params.id
+  Loan.findByIdAndRemove(id).then((loan) => {
+      if (!loan) {
+          return res.status(404).send()
+      }
+      res.send({ loan })
+  }).catch((e) => {
+      res.status(400).send({})
+  })
+
+})
+
 
 
 app.get('/books', books.get)
