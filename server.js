@@ -13,7 +13,6 @@ const { User } = require('./models/user')
 const { Loan } = require('./models/loan')
 const { Book } = require('./models/book')
 
-
 // const corsOptions = { origin: 'http://FRONT-END-URL.herokuapp.com' }
 // corsOptions to be uncommented and passed to cors(<HERE>) when URL known
 
@@ -73,6 +72,7 @@ app.get('/loans', (req, res) => {
 
 app.get('/books', books.get)
 app.get('/books/popular', books.popular)
+app.get('/books/suggestions', books.suggestions)
 
 app.post('/users', users.post)
 app.get('/users/profile', authenticate, users.get)

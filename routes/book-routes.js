@@ -37,3 +37,11 @@ exports.popular = (request, response) => {
       Book.populate(agg, { path: 'book'}))
     .then(resp => response.send(resp))
 }
+
+exports.suggestions = (request, response) => {
+  Book.aggregate([
+    { $sample: { size: 100 } }
+  ])
+  .exec()
+  .then(books => response.send(books))
+}
