@@ -51,7 +51,7 @@ class BookClass {
     const lists = ['wishlist', 'favourite_books', 'books_read']
     return Promise.all(
         lists.reduce((acc, key) =>
-          acc.concat(userObj[key] && userObj[key].map(book =>     Book.createAndSetId(book))),
+          acc.concat(userObj[key] && userObj[key].map(book =>  Book.createAndSetId(book))),
           []
         )
       )
