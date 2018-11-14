@@ -109,7 +109,8 @@ class UserClass {
       'currently_reading',
       'favourite_books',
       'books_read',
-      'wishlist'
+      'wishlist',
+      '_id'
     ]);
   }
 
