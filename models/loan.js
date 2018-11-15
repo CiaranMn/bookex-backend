@@ -1,8 +1,7 @@
 const mongoose = require('mongoose')
-const _ = require('lodash')
 const Schema = mongoose.Schema
 
-const LoanSchema = new mongoose.Schema({
+const LoanSchema = new Schema({
       location: {
         type: String
       }, book: {
@@ -13,8 +12,6 @@ const LoanSchema = new mongoose.Schema({
         ref: "User"
       }
 })
-
-// LoanSchema.loadClass(LoanClass)
 
 const Loan = mongoose.model('Loan', LoanSchema)
 

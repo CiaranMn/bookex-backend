@@ -36,18 +36,8 @@ class BookClass {
     }
   }
 
-  // static findOrCreateBooksFromLists(userObj) {
-  //   const lists = ['wishlist', 'favourite_books', 'books_read']
-  //   return Promise.all(lists.map(list => {
-  //     if (userObj[list] && userObj[list] instanceof Array) {
-  //       return Promise.all(userObj[list].map(book => 
-  //         Book.createAndSetId(book)
-  //       ))
-  //     }
-  //   }))
-  // }
 
-    static findOrCreateBooksFromLists(userObj) {
+  static findOrCreateBooksFromLists(userObj) {
     const lists = ['wishlist', 'favourite_books', 'books_read']
     return Promise.all(
         lists.reduce((acc, key) =>

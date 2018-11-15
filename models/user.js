@@ -9,7 +9,6 @@ const UserSchema = new Schema({
     type: String,
     required: [true, 'Username must be supplied'],
     unique: [true, 'Username is already taken'],
-    // minlength: 4,
     trim: true
   }, password: {
     type: String,
