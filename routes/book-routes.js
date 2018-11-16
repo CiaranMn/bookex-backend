@@ -40,7 +40,6 @@ exports.popular = (request, response) => {
 
 exports.suggestions = (request, response) => {
   Book
-    .distinct()
     .aggregate([
     { $sample: { size: 100 } }
   ])
