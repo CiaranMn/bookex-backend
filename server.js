@@ -55,4 +55,3 @@ app.post('/users/login', users.login)
 app.post('/users/logout', authenticate, users.logout)
 
 app.listen(port, () => console.log(`Server listening on port ${port}.`))
-
