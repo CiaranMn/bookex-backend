@@ -47,10 +47,10 @@
 - returns an array of loans, each representing a user offering a specific book for loan, with the user information populated under a 'user' key and the book information populated under a 'book' key.
 
 ### GET /loans/:id
-- the params.id represents a BOOK - this route returns all loans associated with a particualr book.
+- the params.id represents a BOOK - this route returns all loans associated with a particular book.
 
 ### POST /loans
-- expects a JSON object with a valid user ObjectId under a 'user' key, and a book object under the 'book' key (which will be found in the database or created if necessary, and reduced to an ObjectID).
+- expects a JSON object with book object under the 'book' key (which will be found in the database or created if necessary, and reduced to an ObjectID).
 
 ### DELETE /loans/:id
 - the params.id represents a LOAN - this record will be deleted.
