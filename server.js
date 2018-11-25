@@ -39,10 +39,10 @@ const authenticate = (request, response, next) => {
   }).catch(err => response.status(401).send())
 }
 
-app.post('/loans', loans.post)
-app.get('/loans', loans.get)
-app.get('/loans/:id', loans.getByBook)
-app.delete('/loan/:id', loans.delete)
+app.post('/loans', authenticate, loans.post)
+app.get('/loans', authenticate, loans.get)
+app.get('/loans/:id', authenticate, loans.getByBook)
+app.delete('/loan/:id', authenticate, loans.delete)
 
 app.get('/books', books.get)
 app.get('/books/popular', books.popular)

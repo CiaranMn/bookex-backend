@@ -13,6 +13,7 @@ exports.get = (req, res) => {
     })
 }
 
+// currently unused
 exports.getByBook = (req, res) => {
   Loan.find({ book: req.params.id })
     .populate('book')
@@ -27,7 +28,10 @@ exports.getByBook = (req, res) => {
 
 exports.post = async (req, res) => {
   await Book.createAndSetId(req.body.book)
-  let loan = new Loan(req.body)
+  let loan = new Loan({
+    book: req.body.book,
+    user: req.user
+  })
   loan.save()
     .then(doc => {
       res.send(doc)
@@ -36,15 +40,17 @@ exports.post = async (req, res) => {
     })
 }
 
-
 exports.delete = (req, res) => {
   const id = req.params.id
-  Loan.findByIdAndRemove(id).then((loan) => {
-    if (!loan) {
+  Loan.findById(id).then(loan => {
+      if (!loan) {
       return res.status(404).send()
+    } else if (loan.id !== req.user.id) {
+      return res.status(401).send()
+    } else {
+        Loan.findByIdAndRemove(id).then((loan) => {
+          res.send({ loan })
+        })
     }
-    res.send({ loan })
-  }).catch((e) => {
-    res.status(400).send({})
-  })
+  }).catch(e => { res.status(400).send() })
 }
