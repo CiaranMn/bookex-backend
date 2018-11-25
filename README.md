@@ -70,7 +70,7 @@ The backend runs on Node.JS with Express handling RESTful requests (see routes s
 ##
 ## Loans
 
-**all routes require authentification via a 'authorization' key in the header with a valid JWT attached.
+**all routes require authentification via a 'authorization' key in the header with a valid JWT attached.**
 
 ### GET /loans
 - returns an array of loans, each representing a user offering a specific book for loan, with the user information populated under a 'user' key and the book information populated under a 'book' key.
